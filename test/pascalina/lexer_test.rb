@@ -16,9 +16,18 @@ class Pascalina::LexerTest < Minitest::Test
     assert_equal lexer(" "), []
   end
 
-  test "ignore breaklines" do
-    assert_equal lexer("
-                       "), []
+  test "single breakline" do
+    tokens = lexer("
+                   ")
+    assert_equal [Pascalina::Token::BREAK_LINE], tokens.map(&:type)
+  end
+
+  test "consecutive breaklines" do
+    tokens = lexer("
+
+                   ")
+
+    assert_equal [Pascalina::Token::BREAK_LINE], tokens.map(&:type)
   end
 
   test "ignore comment" do

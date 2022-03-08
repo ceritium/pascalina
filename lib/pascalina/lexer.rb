@@ -31,6 +31,14 @@ module Pascalina
       char = consume
       return if WHITESPACE.include?(char)
       return ignore_comment_line if char == COMMENT
+      if char == BREAK_LINE
+        if tokens.last&.type != Token::BREAK_LINE
+          # Only adds one break line
+          tokens << Token.new(Token::BREAK_LINE, char)
+        end
+        self.line += 1
+        return
+      end
 
       token = if digit?(char)
         consume_number
@@ -38,7 +46,14 @@ module Pascalina
 
       if token
         tokens << token
+      else
+        raise "Error"
       end
+    end
+
+    def token_from_single_char(char)
+      # TODO: avoid to to_sym
+      Token.new(char.to_sym, char, nil)
     end
 
     def ignore_comment_line
