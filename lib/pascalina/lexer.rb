@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Pascalina
   class Lexer
     BREAK_LINE = "\n"
-    COMMENT = '#'
-    WHITESPACE = [' ', "\r", "\t"].freeze
+    COMMENT = "#"
+    WHITESPACE = [" ", "\r", "\t"].freeze
 
     attr_reader :source, :tokens
 
@@ -26,11 +28,11 @@ module Pascalina
 
     def parse_next_token
       self.lexeme_start_p = next_p
-      token = nil
 
       char = consume
       return if WHITESPACE.include?(char)
       return ignore_comment_line if char == COMMENT
+
       if char == BREAK_LINE
         if tokens.last&.type != Token::BREAK_LINE
           # Only adds one break line
@@ -40,15 +42,11 @@ module Pascalina
         return
       end
 
-      token = if digit?(char)
-        consume_number
-      end
+      token = (consume_number if digit?(char))
 
-      if token
-        tokens << token
-      else
-        raise "Error"
-      end
+      raise "Error" unless token
+
+      tokens << token
     end
 
     def token_from_single_char(char)
@@ -63,7 +61,7 @@ module Pascalina
     ## Identify chars
 
     def digit?(char)
-      char >= '0' && char <= '9'
+      char >= "0" && char <= "9"
     end
 
     ## Consumers
@@ -72,7 +70,7 @@ module Pascalina
       consume_digits
 
       # Check if is a decimal number
-      if lookahead(1) == '.' && digit?(lookahead(2))
+      if lookahead(1) == "." && digit?(lookahead(2))
         consume # consume the '.'
         consume_digits # consume the decimal part
       end
