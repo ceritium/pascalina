@@ -6,6 +6,7 @@ require "pascalina"
 require "minitest/autorun"
 
 require "support/test_macro"
+require "support/pick_array"
 
 Minitest::Test.class_eval do
   extend TestMacro

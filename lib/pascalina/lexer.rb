@@ -5,6 +5,7 @@ module Pascalina
     BREAK_LINE = "\n"
     COMMENT = "#"
     WHITESPACE = [" ", "\r", "\t"].freeze
+    SINGLE_SYMBOLS = ["=", "(", ")", "+", "-", "/", "*"].freeze
 
     attr_reader :source, :tokens
 
@@ -36,13 +37,18 @@ module Pascalina
       if char == BREAK_LINE
         if tokens.last&.type != Token::BREAK_LINE
           # Only adds one break line
-          tokens << Token.new(Token::BREAK_LINE, char)
+          tokens << Token.new(Token::BREAK_LINE, char, nil, current_location)
         end
         self.line += 1
         return
       end
 
-      token = (consume_number if digit?(char))
+      token = case char
+              when *SINGLE_SYMBOLS
+                token_from_single_char(char)
+              else
+                consume_number if digit?(char)
+              end
 
       raise "Error" unless token
 
@@ -51,7 +57,7 @@ module Pascalina
 
     def token_from_single_char(char)
       # TODO: avoid to to_sym
-      Token.new(char.to_sym, char, nil)
+      Token.new(char.to_sym, char, nil, current_location)
     end
 
     def ignore_comment_line
@@ -76,7 +82,7 @@ module Pascalina
       end
 
       lexeme = source[lexeme_start_p..(next_p - 1)]
-      Token.new(:number, lexeme, lexeme.to_f)
+      Token.new(:number, lexeme, lexeme.to_f, current_location)
     end
 
     def consume_digits
@@ -87,6 +93,10 @@ module Pascalina
       c = lookahead
       self.next_p += 1
       c
+    end
+
+    def current_location
+      Location.new(line, lexeme_start_p, next_p - lexeme_start_p)
     end
 
     ## Move in the source
