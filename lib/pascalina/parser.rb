@@ -12,7 +12,7 @@ module Pascalina
       Token::PLUS,
       Token::MINUS,
       Token::STAR,
-      Token::SLASH,
+      Token::SLASH
     ].freeze
 
     LOWEST_PRECEDENCE = 0
@@ -82,7 +82,7 @@ module Pascalina
       expr = parse_expr_recursively
 
       # me...
-      return unless consume_if_nxt_is(build_token(:')', ')'))
+      return unless consume_if_nxt_is(build_token(:')', ")"))
 
       expr
     end
@@ -116,9 +116,7 @@ module Pascalina
     end
 
     def determine_infix_function(token = current)
-      if token.is?(*BINARY_OPERATORS)
-        :parse_binary_operator
-      end
+      :parse_binary_operator if token.is?(*BINARY_OPERATORS)
     end
 
     # Consume helpers

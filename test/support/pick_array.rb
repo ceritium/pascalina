@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PickArray
   refine Array do
     def pick(*methods)

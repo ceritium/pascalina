@@ -2,9 +2,11 @@
 
 module Pascalina
   module AST
-    class Number < AST::Expression
-      def initialize(val)
-        super(val)
+    class Number
+      include AST::Expression
+
+      def initialize(value)
+        @value = value
       end
 
       def ==(other)

@@ -2,7 +2,8 @@
 
 module Pascalina
   module AST
-    class BinaryOperator < AST::Expression
+    class BinaryOperator
+      include AST::Expression
       attr_accessor :operator, :left, :right
 
       def initialize(operator, left = nil, right = nil)

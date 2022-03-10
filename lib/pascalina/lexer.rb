@@ -29,7 +29,7 @@ module Pascalina
     def tokenize
       parse_next_token while source_uncompleted?
 
-      tokens << Token.new(Token::EOF, '', nil, after_source_end_location)
+      tokens << Token.new(Token::EOF, "", nil, after_source_end_location)
     end
 
     private
