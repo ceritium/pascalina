@@ -8,5 +8,9 @@ module Pascalina
         col == other.col &&
         source_length == other.source_length
     end
+
+    def to_s
+      "line #{line}, col #{col}"
+    end
   end
 end

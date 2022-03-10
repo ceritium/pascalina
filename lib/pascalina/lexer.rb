@@ -5,9 +5,17 @@ module Pascalina
     BREAK_LINE = "\n"
     COMMENT = "#"
     WHITESPACE = [" ", "\r", "\t"].freeze
-    SINGLE_SYMBOLS = ["=", "(", ")", "+", "-", "/", "*"].freeze
+    SINGLE_SYMBOLS = ["(", ")", "+", "-", "/", "*"].freeze
 
-    attr_reader :source, :tokens
+    attr_reader :source, :tokens, :errors
+
+    class LexerError < StandardError
+      def initialize(char, location)
+        super("Unexpected char '#{char}' at location #{location}")
+        @char = char
+        @location = location
+      end
+    end
 
     def initialize(source)
       @source = source
@@ -15,12 +23,13 @@ module Pascalina
       @line = 0
       @next_p = 0
       @lexeme_start_p = 0
+      @errors = []
     end
 
     def tokenize
       parse_next_token while source_uncompleted?
 
-      tokens
+      tokens << Token.new(Token::EOF, '', nil, after_source_end_location)
     end
 
     private
@@ -50,13 +59,21 @@ module Pascalina
                 consume_number if digit?(char)
               end
 
-      raise "Error" unless token
-
-      tokens << token
+      if token
+        tokens << token
+      else
+        # I have to decide the best approach handle unexpected tokens on the
+        # lexer. Ideas:
+        # - Add unexcepted chars as bad tokens
+        # - Collect the errors
+        # - Raise exception and fail fast
+        # - Allow define the behaviour in the initializer
+        tokens << Token.new(:BAD_TOKEN, char, nil, current_location)
+        errors << LexerError.new(char, current_location)
+      end
     end
 
     def token_from_single_char(char)
-      # TODO: avoid to to_sym
       Token.new(char.to_sym, char, nil, current_location)
     end
 
@@ -116,6 +133,10 @@ module Pascalina
 
     def source_uncompleted?
       !source_completed?
+    end
+
+    def after_source_end_location
+      Location.new(line, next_p, 1)
     end
   end
 end

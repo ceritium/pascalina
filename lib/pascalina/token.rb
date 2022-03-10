@@ -4,7 +4,19 @@ require "forwardable"
 
 module Pascalina
   class Token
-    BREAK_LINE = :_BL
+    AVAILABLE = [
+      PLUS = :'+',
+      MINUS = :'-',
+      STAR = :'*',
+      SLASH = :'/',
+
+      BREAK_LINE = :_BL,
+      EOF = :eof,
+
+      NUMBER = :number,
+      LPAREN = :'(',
+      RPAREN = :')'
+    ].freeze
 
     extend Forwardable
     def_delegators :location, :line, :col, :length
@@ -15,6 +27,10 @@ module Pascalina
       @lexeme = lexeme
       @literal = literal
       @location = location
+    end
+
+    def is?(*types)
+      types.include?(type)
     end
   end
 end
