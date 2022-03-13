@@ -4,10 +4,11 @@ module Pascalina
   class Interpreter
     attr_reader :program, :output, :env, :call_stack, :unwind_call_stack
 
-    def initialize
+    def initialize(env: {})
       @output = []
       @call_stack = []
       @unwind_call_stack = -1
+      @env = env
     end
 
     def interpret(ast)
@@ -56,6 +57,36 @@ module Pascalina
 
     def interpret_number(number)
       number.value
+    end
+
+    def interpret_function_call(function_call)
+      fn_name = function_call.name
+      fn_def = env[fn_name]
+
+      raise "Undefined function #{fn_name}" unless fn_def
+
+      check_arity!(function_call, fn_def)
+
+      args = function_call.args.map do |arg|
+        interpret_node(arg)
+      end
+
+      env[fn_name].call(*args)
+    end
+
+    def check_arity!(function_call, fn_def)
+      arity = if fn_def.is_a?(Proc)
+                fn_def.arity
+              else
+                fn_def.method(:call).arity
+              end
+
+      args_count = function_call.args.count
+
+      # -1 means any number
+      return unless arity >= 0 && (arity != args_count)
+
+      raise "`#{function_call.name}`: wrong number of args (given #{args_count}, expected #{arity}})"
     end
   end
 end

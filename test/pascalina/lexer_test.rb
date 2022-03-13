@@ -75,5 +75,20 @@ module Pascalina
       assert_equal [[:number, 2], [:BAD_TOKEN, nil], [:number, 3], [:eof, nil]], lexer.tokens.pick(:type, :literal)
       assert_equal 1, lexer.errors.count
     end
+
+    test "consume function calls" do
+      tokens = lexer("SUM(1, 2, 3)")
+      assert_equal [
+        [:identifier, "SUM"],
+        [:"(", "("],
+        [:number, "1"],
+        [:",", ","],
+        [:number, "2"],
+        [:",", ","],
+        [:number, "3"],
+        [:")", ")"],
+        [:eof, ""]
+      ], tokens.pick(:type, :lexeme)
+    end
   end
 end

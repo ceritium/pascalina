@@ -50,10 +50,7 @@ module Pascalina
 
     def print_help
       output "Pascalina REPL"
-      output "Write `exit` for quite"
-      puts
-      output "help"
-      output "write `exit` for quit"
+      output "Write `exit` for quit"
     end
 
     def output(string)
