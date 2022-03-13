@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Pascalina
   class Interpreter
     attr_reader :program, :output, :env, :call_stack, :unwind_call_stack
@@ -24,13 +26,10 @@ module Pascalina
       nodes.each do |node|
         last_value = interpret_node(node)
 
-        if unwind_call_stack == call_stack.length
-          # We are still inside a function that returned, so we keep on bubbling up from its structures (e.g., conditionals, loops etc).
-          return last_value
-        elsif unwind_call_stack > call_stack.length
-          # We returned from the function, so we reset the "unwind indicator".
-          self.unwind_call_stack = -1
-        end
+        return last_value if unwind_call_stack == call_stack.length
+
+        # We returned from the function, so we reset the "unwind indicator".
+        self.unwind_call_stack = -1
       end
 
       last_value
@@ -41,13 +40,13 @@ module Pascalina
       send(interpreter_method, node)
     end
 
-    # TODO Is this implementation REALLY the most straightforward in Ruby (apart from using eval)?
+    # TODO: Is this implementation REALLY the most straightforward in Ruby (apart from using eval)?
     def interpret_unary_operator(unary_op)
       case unary_op.operator
       when :'-'
-        -(interpret_node(unary_op.operand))
+        -interpret_node(unary_op.operand)
       else # :'!'
-        !(interpret_node(unary_op.operand))
+        !interpret_node(unary_op.operand)
       end
     end
 
