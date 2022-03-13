@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "readline"
 require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
@@ -7,15 +8,7 @@ loader.setup # ready!
 
 module Pascalina
   def self.run_prompt
-    interpreter = Pascalina::Interpreter.new
-    while buf = Readline.readline("> ", true)
-      begin
-        puts "=> #{run(buf, interpreter: interpreter)}"
-      rescue => e
-        puts e.backtrace
-        puts e.message
-      end
-    end
+    Pascalina::Repl.run
   end
 
   def self.run(source, interpreter: nil)
