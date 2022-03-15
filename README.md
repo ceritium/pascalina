@@ -5,6 +5,15 @@
 - Check args for lambdas, should reject kargs at the moment
 - Add vars by env
 
+## Similar stuff
+
+- [keisan](https://github.com/project-eutopia/keisan):  A Ruby-based expression parser, evaluator, and programming language
+Topics
+- [dentaku](https://github.com/rubysolo/dentaku): Math and logic formula parser and evaluator
+- [rlox](https://github.com/malavbhavsar/rlox): Ruby implementation of Lox, the language described in Crafting Interpreters
+- [stoffle](https://github.com/alexbrahastoll/stoffle): A toy programming language developed as a series of blog posts for the Honeybadger blog.
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
