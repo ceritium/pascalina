@@ -5,7 +5,8 @@ module Pascalina
     attr_accessor :tokens, :ast, :errors
 
     EXPRESSION_TOKENS = [
-      Token::NUMBER
+      Token::NUMBER,
+      Token::IDENTIFIER
     ].freeze
 
     BINARY_OPERATORS = [
@@ -101,6 +102,35 @@ module Pascalina
       AST::Number.new(current.literal)
     end
 
+    def parse_identifier
+      identifier = consume(Token::IDENTIFIER)
+      params = parse_function_call_args
+      AST::FunctionCall.new(identifier.lexeme, params)
+    end
+
+    def parse_function_call_args
+      args = []
+
+      # Function call without arguments.
+      if nxt.is?(Token::RPAREN)
+        consume(Token::RPAREN)
+        return args
+      end
+
+      consume
+      args << parse_expr_recursively
+
+      while nxt.is?(Token::COMMA)
+        consume
+        consume(Token::COMMA)
+        args << parse_expr_recursively
+      end
+
+      return unless consume_if_nxt_is(build_token(:')', ")"))
+
+      args
+    end
+
     def parse_terminator
       nil
     end
@@ -125,6 +155,12 @@ module Pascalina
       return advance if type.nil? || check(*type)
 
       unexpected_token_error(type) if type
+    end
+
+    def check(*types)
+      return false if at_end?
+
+      current.is?(*types)
     end
 
     def consume_if_nxt_is(expected)

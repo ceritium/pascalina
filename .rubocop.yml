@@ -2,7 +2,7 @@ AllCops:
   TargetRubyVersion: 2.5
 
 Layout/LineLength:
-  Enabled: false
+  Max: 120
 
 Metrics/AbcSize:
   Enabled: false
@@ -30,5 +30,4 @@ Style/StringLiteralsInInterpolation:
   Enabled: true
   EnforcedStyle: double_quotes
 
-Layout/LineLength:
-  Max: 120
+

@@ -5,7 +5,7 @@ module Pascalina
     BREAK_LINE = "\n"
     COMMENT = "#"
     WHITESPACE = [" ", "\r", "\t"].freeze
-    SINGLE_SYMBOLS = ["(", ")", "+", "-", "/", "*"].freeze
+    SINGLE_SYMBOLS = [",", "(", ")", "+", "-", "/", "*"].freeze
 
     attr_reader :source, :tokens, :errors
 
@@ -56,7 +56,11 @@ module Pascalina
               when *SINGLE_SYMBOLS
                 token_from_single_char(char)
               else
-                consume_number if digit?(char)
+                if digit?(char)
+                  number
+                elsif identifier?(char)
+                  identifier
+                end
               end
 
       if token
@@ -83,13 +87,19 @@ module Pascalina
 
     ## Identify chars
 
+    def identifier?(char)
+      char >= "a" && char <= "z" ||
+        char >= "A" && char <= "Z" ||
+        char == "_"
+    end
+
     def digit?(char)
       char >= "0" && char <= "9"
     end
 
     ## Consumers
 
-    def consume_number
+    def number
       consume_digits
 
       # Check if is a decimal number
@@ -100,6 +110,17 @@ module Pascalina
 
       lexeme = source[lexeme_start_p..(next_p - 1)]
       Token.new(:number, lexeme, lexeme.to_f, current_location)
+    end
+
+    def identifier
+      consume_identifier
+
+      identifier = source[lexeme_start_p..(next_p - 1)]
+      Token.new(:identifier, identifier, nil, current_location)
+    end
+
+    def consume_identifier
+      consume while identifier?(lookahead)
     end
 
     def consume_digits

@@ -28,5 +28,9 @@ module Pascalina
     test "parses operation and parenthesis" do
       assert_equal [], errors_for("(1 + 2)")
     end
+
+    test "parses a function call" do
+      assert_equal [], errors_for("SUM(1, 2, 3)")
+    end
   end
 end

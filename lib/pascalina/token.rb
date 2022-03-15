@@ -9,11 +9,13 @@ module Pascalina
       MINUS = :'-',
       STAR = :'*',
       SLASH = :'/',
+      COMMA = :",",
 
       BREAK_LINE = :_BL,
       EOF = :eof,
 
       NUMBER = :number,
+      IDENTIFIER = :identifier,
       LPAREN = :'(',
       RPAREN = :')'
     ].freeze
