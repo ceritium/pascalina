@@ -2,14 +2,15 @@
 
 module Pascalina
   class Calculator
-    attr_reader :interpreter
+    attr_reader :context
 
     def initialize
-      @interpreter = Interpreter.new
+      @context = Context.new
     end
 
     def evaluate(code)
-      interpreter.interpret(Parser.new(Lexer.new(code).tokenize).parse)
+      ast = Parser.new(Lexer.new(code).tokenize).parse
+      Interpreter.new(context).interpret(ast)
     end
 
     def add_basic_functions
@@ -18,7 +19,7 @@ module Pascalina
     end
 
     def register_function(name, callable)
-      interpreter.env[name] = callable
+      context.function_registry[name] = callable
       name
     end
   end

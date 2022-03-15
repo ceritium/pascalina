@@ -2,13 +2,13 @@
 
 module Pascalina
   class Interpreter
-    attr_reader :program, :output, :env, :call_stack, :unwind_call_stack
+    attr_reader :program, :output, :context, :call_stack, :unwind_call_stack
 
-    def initialize(env: {})
+    def initialize(context = Context.new)
       @output = []
       @call_stack = []
       @unwind_call_stack = -1
-      @env = env
+      @context = context
     end
 
     def interpret(ast)
@@ -61,7 +61,7 @@ module Pascalina
 
     def interpret_function_call(function_call)
       fn_name = function_call.name
-      fn_def = env[fn_name]
+      fn_def = context.function_registry[fn_name]
 
       raise "Undefined function #{fn_name}" unless fn_def
 
@@ -71,7 +71,7 @@ module Pascalina
         interpret_node(arg)
       end
 
-      env[fn_name].call(*args)
+      fn_def.call(*args)
     end
 
     def check_arity!(function_call, fn_def)
