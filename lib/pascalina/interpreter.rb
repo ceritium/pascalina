@@ -3,6 +3,13 @@
 module Pascalina
   class Interpreter
     attr_reader :program, :output, :context, :call_stack, :unwind_call_stack
+    attr_writer :unwind_call_stack
+
+    class WrongNumberArgs < StandardError
+      def initialize(fn_name, given, expected)
+        super("`#{fn_name}`: wrong number of args (given #{args_count}, expected #{arity}})")
+      end
+    end
 
     def initialize(context = Context.new)
       @output = []
@@ -16,10 +23,6 @@ module Pascalina
 
       interpret_nodes(program.expressions)
     end
-
-    private
-
-    attr_writer :unwind_call_stack
 
     def interpret_nodes(nodes)
       last_value = nil
@@ -59,34 +62,8 @@ module Pascalina
       number.value
     end
 
-    def interpret_function_call(function_call)
-      fn_name = function_call.name
-      fn_def = context.function_registry[fn_name]
-
-      raise "Undefined function #{fn_name}" unless fn_def
-
-      check_arity!(function_call, fn_def)
-
-      args = function_call.args.map do |arg|
-        interpret_node(arg)
-      end
-
-      fn_def.call(*args)
-    end
-
-    def check_arity!(function_call, fn_def)
-      arity = if fn_def.is_a?(Proc)
-                fn_def.arity
-              else
-                fn_def.method(:call).arity
-              end
-
-      args_count = function_call.args.count
-
-      # -1 means any number
-      return unless arity >= 0 && (arity != args_count)
-
-      raise "`#{function_call.name}`: wrong number of args (given #{args_count}, expected #{arity}})"
+    def interpret_function_call(fn_call)
+      Interpreter::FunctionCall.new(fn_call, self).call
     end
   end
 end

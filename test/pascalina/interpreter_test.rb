@@ -24,16 +24,16 @@ module Pascalina
       context = Context.new
       context.function_registry["TWO_ARGS"] = ->(a, b) { a + b }
       interpreter = Interpreter.new(context)
-      exception = assert_raises RuntimeError do
+      exception = assert_raises Interpreter::FunctionCall::WrongNumberArgsError do
         interpreter.interpret(ast_for("TWO_ARGS(1, 2, 3)"))
       end
 
-      assert_equal "`TWO_ARGS`: wrong number of args (given 3, expected 2})", exception.message
+      assert_equal "`TWO_ARGS`: wrong number of args (given 3, expected 2)", exception.message
     end
 
     test "missing function" do
       interpreter = Interpreter.new
-      exception = assert_raises RuntimeError do
+      exception = assert_raises Interpreter::FunctionCall::UndefinedFunctionError do
         interpreter.interpret(ast_for("MISSING(1, 2)"))
       end
 

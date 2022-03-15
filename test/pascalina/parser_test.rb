@@ -32,5 +32,9 @@ module Pascalina
     test "parses a function call" do
       assert_equal [], errors_for("SUM(1, 2, 3)")
     end
+
+    test "parses a variable" do
+      # assert_equal [], errors_for("X * 2")
+    end
   end
 end
