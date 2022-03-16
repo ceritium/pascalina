@@ -3,7 +3,7 @@
 module Pascalina
   class Interpreter
     attr_reader :program, :output, :context, :call_stack
-    attr_writer :unwind_call_stack
+    attr_accessor :unwind_call_stack
 
     def initialize(context = Context.new)
       @output = []
@@ -58,6 +58,10 @@ module Pascalina
 
     def interpret_function_call(fn_call)
       Interpreter::FunctionCall.new(fn_call, self).call
+    end
+
+    def interpret_identifier(identifier)
+      context.variable_registry[identifier.name]
     end
   end
 end

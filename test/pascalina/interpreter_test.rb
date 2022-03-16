@@ -39,5 +39,12 @@ module Pascalina
 
       assert_equal "Undefined function MISSING", exception.message
     end
+
+    test "with vars" do
+      context = Context.new
+      context.variable_registry["X"] = 2
+      interpreter = Interpreter.new(context)
+      interpreter.interpret(ast_for("X * 2"))
+    end
   end
 end

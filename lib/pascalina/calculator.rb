@@ -8,8 +8,12 @@ module Pascalina
       @context = Context.new
     end
 
-    def evaluate(code)
+    def evaluate(code, vars = {})
       ast = Parser.new(Lexer.new(code).tokenize).parse
+      vars.each_pair do |k, v|
+        context.variable_registry[k] = v
+      end
+
       Interpreter.new(context).interpret(ast)
     end
 
