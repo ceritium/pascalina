@@ -3,8 +3,6 @@
 module Pascalina
   class Interpreter
     class FunctionCall
-      attr_reader :fn_call, :interpreter
-
       module FunctionCallHelpers
         def fn_name
           @fn_name ||= fn_call.name
@@ -52,15 +50,17 @@ module Pascalina
         end
       end
 
+      attr_reader :fn_call, :interpreter
+
       def initialize(fn_call, interpreter)
         @fn_call = fn_call
         @interpreter = interpreter
       end
 
       def call
-        raise UndefinedFunctionError.new(fn_call, fn_def) unless fn_def
-
+        check_fn_def!
         check_arity!
+
         args = fn_call.args.map do |arg|
           interpreter.interpret_node(arg)
         end
@@ -70,8 +70,11 @@ module Pascalina
 
       private
 
-      def check_arity!
+      def check_fn_def!
+        raise UndefinedFunctionError.new(fn_call, fn_def) unless fn_def
+      end
 
+      def check_arity!
         # -1 means any number
         return unless fn_def_arity >= 0 && (fn_def_arity != call_args_count)
 

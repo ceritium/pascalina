@@ -2,14 +2,8 @@
 
 module Pascalina
   class Interpreter
-    attr_reader :program, :output, :context, :call_stack, :unwind_call_stack
+    attr_reader :program, :output, :context, :call_stack
     attr_writer :unwind_call_stack
-
-    class WrongNumberArgs < StandardError
-      def initialize(fn_name, given, expected)
-        super("`#{fn_name}`: wrong number of args (given #{args_count}, expected #{arity}})")
-      end
-    end
 
     def initialize(context = Context.new)
       @output = []
