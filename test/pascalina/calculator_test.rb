@@ -46,5 +46,20 @@ module Pascalina
       @calculator.register_function("SUM", DummyCalllableModule)
       assert_equal 3, @calculator.evaluate("SUM(1,2)")
     end
+
+    test "passing variables" do
+      assert_equal 4, @calculator.evaluate("X + 2", "X" => 2)
+      assert_equal 3, @calculator.evaluate("X + 2", "X" => 1)
+    end
+
+    test "assigned variables persist between evaluations" do
+      assert_equal 4, @calculator.evaluate("X + 2", "X" => 2)
+      assert_equal 3, @calculator.evaluate("X + 1")
+    end
+
+    test "can use variables as params on functions" do
+      @calculator.register_function("SUM", ->(*numbers) { numbers.sum })
+      assert_equal 3, @calculator.evaluate("SUM(1,X)", "X" => 2)
+    end
   end
 end

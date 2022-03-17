@@ -2,6 +2,19 @@
 
 module Pascalina
   class Parser
+    class UnexpectedToken < StandardError
+      attr_reader :current_token, :next_token, :expected_token
+
+      def initialize(current_token, next_token, expected_token = nil)
+        @current_token = current_token
+        @next_token = next_token
+        @expected_token = expected_token
+        message = "Unexpected token #{next_token.lexeme} after #{current_token.lexeme}"
+        message += "\nExpected: #{expected_token}" unless expected_token.nil?
+        super(message)
+      end
+    end
+
     attr_accessor :tokens, :ast, :errors
 
     EXPRESSION_TOKENS = [
@@ -103,9 +116,14 @@ module Pascalina
     end
 
     def parse_identifier
-      identifier = consume(Token::IDENTIFIER)
-      params = parse_function_call_args
-      AST::FunctionCall.new(identifier.lexeme, params)
+      if nxt.is?(Token::LPAREN)
+        identifier = consume(Token::IDENTIFIER)
+        params = parse_function_call_args
+        AST::FunctionCall.new(identifier.lexeme, params)
+      else
+        # TODO: check next token
+        AST::Identifier.new(current.lexeme)
+      end
     end
 
     def parse_function_call_args
@@ -215,6 +233,10 @@ module Pascalina
 
     def at_end?
       current&.is?(Token::EOF)
+    end
+
+    def unexpected_token_error(expected)
+      errors << UnexpectedToken.new(current, nxt, expected)
     end
   end
 end

@@ -90,5 +90,15 @@ module Pascalina
         [:eof, ""]
       ], tokens.pick(:type, :lexeme)
     end
+
+    test "consume variables" do
+      tokens = lexer("X * 2")
+      assert_equal [
+        [:identifier, "X"],
+        [:*, "*"],
+        [:number, "2"],
+        [:eof, ""]
+      ], tokens.pick(:type, :lexeme)
+    end
   end
 end
