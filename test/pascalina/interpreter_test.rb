@@ -37,7 +37,7 @@ module Pascalina
         interpreter.interpret(ast_for("MISSING(1, 2)"))
       end
 
-      assert_equal "Undefined function MISSING", exception.message
+      assert_equal "Undefined function `MISSING`", exception.message
     end
 
     test "with vars" do
