@@ -27,14 +27,15 @@ module Pascalina
 
       include FunctionCallHelpers
 
-      class FunctionCallError < StandardError
+      class FunctionCallError < Pascalina::Error
         include FunctionCallHelpers
         attr_reader :fn_call, :fn_def
 
         def initialize(fn_call, fn_def)
-          super()
           @fn_call = fn_call
           @fn_def = fn_def
+
+          super(message)
         end
       end
 
@@ -46,7 +47,7 @@ module Pascalina
 
       class UndefinedFunctionError < FunctionCallError
         def message
-          "Undefined function #{fn_call.name}"
+          "Undefined function `#{fn_call.name}`"
         end
       end
 

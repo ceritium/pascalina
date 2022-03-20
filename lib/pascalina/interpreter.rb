@@ -2,6 +2,16 @@
 
 module Pascalina
   class Interpreter
+    class UndefinedVariableError < Error
+      attr_reader :name
+
+      def initialize(name)
+        @name = name
+        message = "Undefined variable `#{name}`"
+        super(message)
+      end
+    end
+
     attr_reader :program, :output, :context, :call_stack
     attr_accessor :unwind_call_stack
 
@@ -61,7 +71,10 @@ module Pascalina
     end
 
     def interpret_identifier(identifier)
-      context.variable_registry[identifier.name]
+      value = context.variable_registry[identifier.name]
+      raise UndefinedVariableError, identifier.name unless value
+
+      value
     end
   end
 end

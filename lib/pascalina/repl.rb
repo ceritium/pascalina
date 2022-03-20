@@ -41,11 +41,17 @@ module Pascalina
         output("bye!")
         @running = false
       else
-        lexer = Pascalina::Lexer.new(command)
-        parser = Pascalina::Parser.new(lexer.tokenize)
-        parser.parse
-        output(interpreter.interpret(parser.ast))
+        interpret(command)
       end
+    end
+
+    def interpret(command)
+      lexer = Pascalina::Lexer.new(command)
+      parser = Pascalina::Parser.new(lexer.tokenize)
+      parser.parse
+      output(interpreter.interpret(parser.ast))
+    rescue Pascalina::Error => e
+      output(e)
     end
 
     def print_help

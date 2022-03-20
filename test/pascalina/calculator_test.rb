@@ -61,5 +61,25 @@ module Pascalina
       @calculator.register_function("SUM", ->(*numbers) { numbers.sum })
       assert_equal 3, @calculator.evaluate("SUM(1,X)", "X" => 2)
     end
+
+    test "evaluate! raises Parser::UnrecognizedTokenError" do
+      assert_raises Parser::UnrecognizedTokenError do
+        @calculator.evaluate!("1 ** 1")
+      end
+    end
+
+    test "evaluate returns nil when UnrecognizedTokenError" do
+      assert_nil @calculator.evaluate("1 ** 1")
+    end
+
+    test "evaluate! raises Interpreter::UndefinedVariableError" do
+      assert_raises Interpreter::UndefinedVariableError do
+        @calculator.evaluate!("A * 1")
+      end
+    end
+
+    test "evaluate returns nil when Interpreter::UndefinedVariableError" do
+      assert_nil @calculator.evaluate("A * 1")
+    end
   end
 end

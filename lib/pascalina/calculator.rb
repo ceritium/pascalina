@@ -9,12 +9,39 @@ module Pascalina
     end
 
     def evaluate(code, vars = {})
-      ast = Parser.new(Lexer.new(code).tokenize).parse
+      lexer = Lexer.new(code)
+      lexer.tokenize
+      return if lexer.errors.first
+
+      parser = Parser.new(lexer.tokens)
+      parser.parse
+      return if parser.errors.first
+
       vars.each_pair do |k, v|
         context.variable_registry[k] = v
       end
 
-      Interpreter.new(context).interpret(ast)
+      interpreter = Interpreter.new(context)
+      interpreter.interpret(parser.ast)
+    rescue Interpreter::UndefinedVariableError
+      nil
+    end
+
+    def evaluate!(code, vars = {})
+      lexer = Lexer.new(code)
+      lexer.tokenize
+      raise lexer.errors.first if lexer.errors.first
+
+      parser = Parser.new(lexer.tokens)
+      parser.parse
+      raise parser.errors.first if parser.errors.first
+
+      vars.each_pair do |k, v|
+        context.variable_registry[k] = v
+      end
+
+      interpreter = Interpreter.new(context)
+      interpreter.interpret(parser.ast)
     end
 
     def add_basic_functions

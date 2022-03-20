@@ -2,7 +2,7 @@
 
 module Pascalina
   class Parser
-    class UnexpectedToken < StandardError
+    class UnexpectedTokenError < StandardError
       attr_reader :current_token, :next_token, :expected_token
 
       def initialize(current_token, next_token, expected_token = nil)
@@ -11,6 +11,16 @@ module Pascalina
         @expected_token = expected_token
         message = "Unexpected token #{next_token.lexeme} after #{current_token.lexeme}"
         message += "\nExpected: #{expected_token}" unless expected_token.nil?
+        super(message)
+      end
+    end
+
+    class UnrecognizedTokenError < StandardError
+      attr_reader :unrecognized_token
+
+      def initialize(token)
+        @unrecognized_token = token
+        message = "Unrecognized token #{unrecognized_token.lexeme}"
         super(message)
       end
     end
@@ -106,9 +116,15 @@ module Pascalina
       op_precedence = current_precedence
 
       consume
-      op.right = parse_expr_recursively(op_precedence)
+      right = parse_expr_recursively(op_precedence)
 
-      op
+      if right
+        op.right = right
+        op
+      else
+        unexpected_token_error(Token::NUMBER)
+        nil
+      end
     end
 
     def parse_number
@@ -236,7 +252,11 @@ module Pascalina
     end
 
     def unexpected_token_error(expected)
-      errors << UnexpectedToken.new(current, nxt, expected)
+      errors << UnexpectedTokenError.new(current, nxt, expected)
+    end
+
+    def unrecognized_token_error
+      errors << UnrecognizedTokenError.new(current)
     end
   end
 end
