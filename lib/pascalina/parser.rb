@@ -136,10 +136,18 @@ module Pascalina
         identifier = consume(Token::IDENTIFIER)
         params = parse_function_call_args
         AST::FunctionCall.new(identifier.lexeme, params)
+      elsif nxt.is?(Token::EQUAL)
+        parse_var_binding
       else
         # TODO: check next token
         AST::Identifier.new(current.lexeme)
       end
+    end
+
+    def parse_var_binding
+      identifier = AST::Identifier.new(consume(Token::IDENTIFIER).lexeme)
+      consume(Token::EQUAL)
+      AST::VarBinding.new(identifier, parse_expr_recursively)
     end
 
     def parse_function_call_args

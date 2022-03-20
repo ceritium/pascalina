@@ -36,5 +36,9 @@ module Pascalina
     test "parses a variable" do
       assert_equal [], errors_for("X * 2")
     end
+
+    test "parses an assignment variable" do
+      assert_equal [], errors_for("X = 2")
+    end
   end
 end

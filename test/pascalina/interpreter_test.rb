@@ -44,7 +44,13 @@ module Pascalina
       context = Context.new
       context.variable_registry["X"] = 2
       interpreter = Interpreter.new(context)
-      interpreter.interpret(ast_for("X * 2"))
+      assert_equal 4, interpreter.interpret(ast_for("X * 2"))
+    end
+
+    test "assign var" do
+      interpreter = Interpreter.new
+      interpreter.interpret(ast_for("X = 2"))
+      assert_equal 2, interpreter.interpret(ast_for("X"))
     end
   end
 end
