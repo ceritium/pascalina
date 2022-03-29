@@ -5,6 +5,7 @@ require "forwardable"
 module Pascalina
   class Token
     AVAILABLE = [
+      EQUAL = :"=",
       PLUS = :'+',
       MINUS = :'-',
       STAR = :'*',

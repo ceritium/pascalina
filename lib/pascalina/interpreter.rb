@@ -66,6 +66,10 @@ module Pascalina
       number.value
     end
 
+    def interpret_var_binding(var_binding)
+      context.variable_registry[var_binding.left.name] = var_binding.right.value
+    end
+
     def interpret_function_call(fn_call)
       Interpreter::FunctionCall.new(fn_call, self).call
     end
