@@ -8,6 +8,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    benchmark-ips (2.10.0)
     minitest (5.15.0)
     parallel (1.21.0)
     parser (3.1.1.0)
@@ -36,6 +37,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  benchmark-ips
   minitest (~> 5.0)
   pascalina!
   rake (~> 13.0)

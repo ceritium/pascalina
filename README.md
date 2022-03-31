@@ -1,9 +1,32 @@
 # Pascalina
 
-## TODO:
+## Usage
 
-- Check args for lambdas, should reject kargs at the moment
-- Add vars by env
+TODO: ...
+
+### AST cache
+
+Pascalina doesn't handle the AST cache like other alternatives, but you can
+cache it your-self and pass it with `evaluate_ast`.
+
+Check the `benchmark/ast.rb` to see the usage:
+
+```ruby
+
+Warming up --------------------------------------
+            evaluate   634.000  i/100ms
+marshal evaluate_ast     1.464k i/100ms
+ direct evaluate_ast     1.595k i/100ms
+Calculating -------------------------------------
+            evaluate      5.783k (±14.2%) i/s -     29.164k in   5.146870s
+marshal evaluate_ast     14.502k (±18.1%) i/s -     70.272k in   5.015046s
+ direct evaluate_ast     22.910k (±19.1%) i/s -    106.865k in   5.046620s
+
+Comparison:
+ direct evaluate_ast:    22910.4 i/s
+marshal evaluate_ast:    14502.0 i/s - 1.58x  (± 0.00) slower
+            evaluate:     5782.7 i/s - 3.96x  (± 0.00) slower
+```
 
 ## Similar stuff
 
@@ -29,10 +52,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install pascalina
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Development
 
