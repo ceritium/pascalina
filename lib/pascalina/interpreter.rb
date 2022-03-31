@@ -48,13 +48,12 @@ module Pascalina
       send(interpreter_method, node)
     end
 
-    # TODO: Is this implementation REALLY the most straightforward in Ruby (apart from using eval)?
     def interpret_unary_operator(unary_op)
       case unary_op.operator
-      when :'-'
+      when Token::MINUS
         -interpret_node(unary_op.operand)
-      else # :'!'
-        !interpret_node(unary_op.operand)
+      when Token::PLUS
+        interpret_node(unary_op.operand)
       end
     end
 

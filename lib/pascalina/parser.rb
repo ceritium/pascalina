@@ -27,6 +27,11 @@ module Pascalina
 
     attr_accessor :tokens, :ast, :errors
 
+    UNARY_OPERATORS = [
+      Token::MINUS,
+      Token::PLUS
+    ].freeze
+
     EXPRESSION_TOKENS = [
       Token::NUMBER,
       Token::IDENTIFIER
@@ -173,6 +178,14 @@ module Pascalina
       args
     end
 
+    def parse_unary_operator
+      op = AST::UnaryOperator.new(current.type)
+      consume
+      op.operand = parse_expr_recursively(PREFIX_PRECEDENCE)
+
+      op
+    end
+
     def parse_terminator
       nil
     end
@@ -184,6 +197,8 @@ module Pascalina
         :parse_grouped_expr
       elsif end_of_line?(current)
         :parse_terminator
+      elsif current.is?(*UNARY_OPERATORS)
+        :parse_unary_operator
       end
     end
 
