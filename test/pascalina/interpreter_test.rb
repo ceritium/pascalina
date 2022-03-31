@@ -8,6 +8,14 @@ module Pascalina
       Parser.new(Lexer.new(code).tokenize).parse
     end
 
+    test "negative number" do
+      assert_equal(-1, Interpreter.new.interpret(ast_for("-1")))
+    end
+
+    test "positive number" do
+      assert_equal(1, Interpreter.new.interpret(ast_for("+1")))
+    end
+
     test "parses number token" do
       Interpreter.new.interpret(ast_for("1 + 1"))
     end
