@@ -11,13 +11,8 @@ module Pascalina
     Pascalina::Repl.run
   end
 
-  def self.run(source, interpreter: nil)
-    lexer = Pascalina::Lexer.new(source)
-    parser = Pascalina::Parser.new(lexer.tokenize)
-    interpreter ||= Pascalina::Interpreter.new
-    parser.parse
-    puts parser.errors
-
-    interpreter.interpret(parser.ast)
+  def self.run_file(file_path)
+    code = File.read(file_path)
+    puts Pascalina::Calculator.new.evaluate!(code)
   end
 end

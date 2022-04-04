@@ -57,8 +57,8 @@ module Pascalina
 
     test "assign var" do
       interpreter = Interpreter.new
-      interpreter.interpret(ast_for("X = 2"))
-      assert_equal 2, interpreter.interpret(ast_for("X"))
+      interpreter.interpret(ast_for("X = 2 + 2"))
+      assert_equal 4, interpreter.interpret(ast_for("X"))
     end
   end
 end

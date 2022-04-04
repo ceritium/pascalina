@@ -10,7 +10,7 @@ module Pascalina
 
     def initialize
       @running = true
-      new_interpreter
+      new_calculator
     end
 
     def run
@@ -24,10 +24,10 @@ module Pascalina
 
     private
 
-    attr_reader :interpreter
+    attr_reader :calculator
 
-    def new_interpreter
-      @interpreter = Pascalina::Interpreter.new
+    def new_calculator
+      @calculator = Pascalina::Calculator.new
     end
 
     def process_command(command)
@@ -35,21 +35,18 @@ module Pascalina
       when "help"
         print_help
       when "reload"
-        new_interpreter
+        new_calculator
         output("reloaded!")
       when "exit"
         output("bye!")
         @running = false
       else
-        interpret(command)
+        evaluate(command)
       end
     end
 
-    def interpret(command)
-      lexer = Pascalina::Lexer.new(command)
-      parser = Pascalina::Parser.new(lexer.tokenize)
-      parser.parse
-      output(interpreter.interpret(parser.ast))
+    def evaluate(command)
+      output calculator.evaluate!(command)
     rescue Pascalina::Error => e
       output(e)
     end

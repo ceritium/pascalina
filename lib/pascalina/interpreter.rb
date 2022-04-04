@@ -66,7 +66,7 @@ module Pascalina
     end
 
     def interpret_var_binding(var_binding)
-      context.variable_registry[var_binding.left.name] = var_binding.right.value
+      context.variable_registry[var_binding.left.name] = interpret_node(var_binding.right)
     end
 
     def interpret_function_call(fn_call)
