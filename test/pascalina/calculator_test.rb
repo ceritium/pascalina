@@ -81,5 +81,13 @@ module Pascalina
     test "evaluate returns nil when Interpreter::UndefinedVariableError" do
       assert_nil @calculator.evaluate("A * 1")
     end
+
+    test "cache ast" do
+      ast = @calculator.generate_ast("1 + 1")
+      serialized_ast = Marshal.dump(ast)
+      deserialized_ast = Marshal.load(serialized_ast) # rubocop:disable Security/MarshalLoad
+
+      assert_equal 2, @calculator.evaluate_ast(deserialized_ast)
+    end
   end
 end

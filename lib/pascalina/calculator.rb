@@ -8,40 +8,49 @@ module Pascalina
       @context = Context.new
     end
 
+    def evaluate_ast(ast, vars = {})
+      interpret(ast, vars)
+    end
+
     def evaluate(code, vars = {})
-      lexer = Lexer.new(code)
-      lexer.tokenize
-      return if lexer.errors.first
-
-      parser = Parser.new(lexer.tokens)
-      parser.parse
-      return if parser.errors.first
-
-      vars.each_pair do |k, v|
-        context.variable_registry[k] = v
-      end
-
-      interpreter = Interpreter.new(context)
-      interpreter.interpret(parser.ast)
+      ast = generate_ast(code, raise_error: false)
+      interpret(ast, vars) if ast
     rescue Interpreter::UndefinedVariableError
       nil
     end
 
     def evaluate!(code, vars = {})
+      ast = generate_ast(code, raise_error: true)
+      interpret(ast, vars)
+    end
+
+    def interpret(ast, vars)
+      context.register_vars(vars)
+
+      interpreter = Interpreter.new(context)
+      interpreter.interpret(ast)
+    end
+
+    def generate_ast(code, raise_error: false)
       lexer = Lexer.new(code)
       lexer.tokenize
-      raise lexer.errors.first if lexer.errors.first
+
+      if lexer.errors.first
+        return unless raise_error
+
+        raise parser.errors.first
+      end
 
       parser = Parser.new(lexer.tokens)
       parser.parse
-      raise parser.errors.first if parser.errors.first
 
-      vars.each_pair do |k, v|
-        context.variable_registry[k] = v
+      if parser.errors.first
+        return unless raise_error
+
+        raise parser.errors.first
       end
 
-      interpreter = Interpreter.new(context)
-      interpreter.interpret(parser.ast)
+      parser.ast
     end
 
     def add_basic_functions
