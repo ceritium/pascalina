@@ -2,7 +2,29 @@
 
 ## Usage
 
-TODO: ...
+You can try a basic REPL:
+
+```bash
+$ pascalina
+=> Pascalina REPL
+=> Write `exit` for quit
+pascalina> 4 + 3
+=> 7.0
+```
+
+Or run your pascalina scripts from console:
+
+```bash
+$ pascalina examples/demo1.lina
+6.0
+```
+
+But Pascalina is meant to be embebed in your app and let your users build their
+own calculus:
+
+```ruby
+Pascalina::Calculator.new.evaluate("1+1")
+```
 
 ### AST cache
 
