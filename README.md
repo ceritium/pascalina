@@ -33,8 +33,7 @@ cache it your-self and pass it with `evaluate_ast`.
 
 Check the `benchmark/ast.rb` to see the usage:
 
-```ruby
-
+```
 Warming up --------------------------------------
             evaluate   634.000  i/100ms
 marshal evaluate_ast     1.464k i/100ms

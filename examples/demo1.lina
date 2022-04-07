@@ -1,2 +1,4 @@
+# This is a comment
 A = 1 + 2
 A * 2
+# The outout shuld be 6

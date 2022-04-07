@@ -28,6 +28,11 @@ module Pascalina
       assert_equal 6, interpreter.interpret(ast_for("SUM(1, 2, SUM(1,2))"))
     end
 
+    test "semicolon" do
+      assert_equal 2, Interpreter.new.interpret(ast_for("1; 2"))
+      assert_equal 6, Interpreter.new.interpret(ast_for("A = 3; A * 2"))
+    end
+
     test "funct" do
       context = Context.new
       context.function_registry["TWO_ARGS"] = ->(a, b) { a + b }
