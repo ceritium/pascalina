@@ -2,7 +2,29 @@
 
 ## Usage
 
-TODO: ...
+You can try a basic REPL:
+
+```bash
+$ pascalina
+=> Pascalina REPL
+=> Write `exit` for quit
+pascalina> 4 + 3
+=> 7.0
+```
+
+Or run your pascalina scripts from console:
+
+```bash
+$ pascalina examples/demo1.lina
+6.0
+```
+
+But Pascalina is meant to be embebed in your app and let your users build their
+own calculus:
+
+```ruby
+Pascalina::Calculator.new.evaluate("1+1")
+```
 
 ### AST cache
 
@@ -11,8 +33,7 @@ cache it your-self and pass it with `evaluate_ast`.
 
 Check the `benchmark/ast.rb` to see the usage:
 
-```ruby
-
+```
 Warming up --------------------------------------
             evaluate   634.000  i/100ms
 marshal evaluate_ast     1.464k i/100ms

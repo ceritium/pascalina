@@ -9,6 +9,5 @@ when 0
 when 1
   Pascalina.run_file(ARGV[0])
 else
-  # Pas.print_usage
   exit(64)
 end

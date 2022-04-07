@@ -5,7 +5,7 @@ module Pascalina
     BREAK_LINE = "\n"
     COMMENT = "#"
     WHITESPACE = [" ", "\r", "\t"].freeze
-    SINGLE_SYMBOLS = ["=", ",", "(", ")", "+", "-", "/", "*"].freeze
+    SINGLE_SYMBOLS = [";", "=", ",", "(", ")", "+", "-", "/", "*"].freeze
 
     attr_reader :source, :tokens, :errors
 

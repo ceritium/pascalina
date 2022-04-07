@@ -49,6 +49,11 @@ module Pascalina
       assert_equal [[:number, 4], [:eof, nil]], tokens.pick(:type, :literal)
     end
 
+    test ";" do
+      tokens = lexer(";")
+      assert_equal [[:";", nil], [:eof, nil]], tokens.pick(:type, :literal)
+    end
+
     test "multiple digit number" do
       tokens = lexer("42")
       assert_equal [[:number, 42], [:eof, nil]], tokens.pick(:type, :literal)
